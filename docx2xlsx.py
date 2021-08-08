@@ -6,6 +6,7 @@ import pandas as pd
 import os
 import zipfile
 import csv
+import re
 
 global ls
 ls=[]
@@ -27,38 +28,59 @@ def click():
 def exportxls():
     global df
 
+    #this is also a number of rows excluding the questions row
     counter = 0
 
+    ls_Qs = []
+    ls_As = []
+
+    chars = ""
+    
     for i in ls:
+
         document = Document(i)
         table = document.tables[0]
         data = [[cell.text for cell in row.cells] for row in table.rows]
         df_temp = pd.DataFrame(data)
-        df_temp2 = pd.DataFrame(data) #unflipped
+        
+        #temp list for questions and answers
+        ls_q_temp = df_temp[0] 
+        ls_a_temp = df_temp[1]
+        
+        #add all elements to its own list
+        #insert delimeter if needed
+        if counter == 0 :
+            for j in ls_q_temp:
+                #replace commas with '/' so that .csv file doesnt go crazy
+                ls_Qs.append(j.replace(',',"/"))
+                    
+        for k in ls_a_temp:
+            #replace new lines with spaces so its the correct format
+            ls_As.append(k.replace('\n'," "))
+            
+        counter+=1    
+    
+    #loop from 1 to the number of files provided
+    #export to csv file with right formatting hopefully
+    pos_count=0
+    ls_2write=[]
+    
+    #if you are new user, change this 'C:\\Users\Dave.comia\Documents\Python Scripts\' to the directory you want to save file in
+    with open('C:\\Users\Dave.comia\Documents\Python Scripts\sample.csv','w', newline='', encoding='utf-8') as csvfile:
+        writer=csv.writer(csvfile, quotechar=' ')    
+        
+        for e in range(1, counter+1):
+            #export headers
+            if e == 1:
+                writer.writerow(ls_Qs)
 
-        #df_temp = df_temp.rename(columns=df_temp.iloc[0]).drop(df_temp.index[0]).reset_index(drop=True)
-        #df_temp2 = df_temp2.rename(columns=df_temp2.iloc[0]).drop(df_temp2.index[0]).reset_index(drop=True)
-
-        # flip df
-        df_temp.index = [0] * len(df_temp)
-        df_temp = df_temp.pivot(index=None, columns=0, values=1)
-
-        if counter == 0:
-            df = df_temp
-        else: #next iteration, append answers to df
-            ls_ans_final = []
-            ls_ans = df_temp2[1]
-            for x in ls_ans:
-                ls_ans_final.append(x)
-
-            df_length = len(df)
-            df.loc[df_length] = ls_ans_final
-
-        counter+=1
-
-    print(df)
-
-
+            #export contents of ls_As from pos(1) to pos(l en(ls_Qs)) at index(e+1)
+            #pos = position in list
+            #index = row number
+            ls_2write = ls_As[pos_count:pos_count+len(ls_Qs)]
+            pos_count = pos_count + len(ls_Qs)
+            writer.writerow(ls_2write)
+    
     window.destroy()
     exit()
 
