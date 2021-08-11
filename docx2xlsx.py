@@ -51,12 +51,16 @@ def exportxls():
         #insert delimeter if needed
         if counter == 0 :
             for j in ls_q_temp:
-                #replace commas with '/' so that .csv file doesnt go crazy
-                ls_Qs.append(j.replace(',',"/"))
+                #replace commas with '/' and '\n' with spaces so that .csv file doesnt go crazy
+                j = j.replace('\n'," ")
+                j = j.replace(','," / ")
+                ls_Qs.append(j)
                     
         for k in ls_a_temp:
-            #replace new lines with spaces so its the correct format
-            ls_As.append(k.replace('\n'," "))
+            #replace commas with '/' and '\n' with spaces so that .csv file doesnt go crazy
+            k = k.replace('\n'," ")
+            k= k.replace(','," / ")
+            ls_As.append(k)
             
         counter+=1    
     
@@ -66,7 +70,7 @@ def exportxls():
     ls_2write=[]
     
     #if you are new user, change this 'C:\\Users\Dave.comia\Documents\Python Scripts\' to the directory you want to save file in
-    with open('C:\\Users\Dave.comia\Documents\Python Scripts\sample.csv','w', newline='', encoding='utf-8') as csvfile:
+    with open('C:\\Users\Dave.comia\Documents\Python Scripts\sample.csv','w', newline='', encoding='utf-8-sig') as csvfile:
         writer=csv.writer(csvfile, quotechar=' ')    
         
         for e in range(1, counter+1):
@@ -81,6 +85,7 @@ def exportxls():
             pos_count = pos_count + len(ls_Qs)
             writer.writerow(ls_2write)
     
+    print(ls_Qs)
     window.destroy()
     exit()
 
