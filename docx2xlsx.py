@@ -1,12 +1,8 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
 from docx import Document
-from os import listdir
 import pandas as pd
-import os
-import zipfile
 import csv
-import re
 
 global ls
 ls=[]
@@ -70,7 +66,7 @@ def exportxls():
     ls_2write=[]
     
     #if you are new user, change this 'C:\\Users\Dave.comia\Documents\Python Scripts\' to the directory you want to save file in
-    with open('C:\\Users\Dave.comia\Documents\Python Scripts\sample.csv','w', newline='', encoding='utf-8-sig') as csvfile:
+    with open('C:\\Users\stefan.lim\Desktop\sample.csv','w', newline='', encoding='utf-8-sig') as csvfile:
         writer=csv.writer(csvfile, quotechar=' ')    
         
         for e in range(1, counter+1):
@@ -85,9 +81,9 @@ def exportxls():
             pos_count = pos_count + len(ls_Qs)
             writer.writerow(ls_2write)
     
-    print(ls_Qs)
+   
     window.destroy()
-    exit()
+    window.quit()
 
 # main
 window = Tk()
